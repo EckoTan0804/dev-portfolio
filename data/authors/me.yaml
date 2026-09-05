@@ -2,98 +2,111 @@ schema: hugoblox/author/v1
 slug: me
 is_owner: true
 name:
-  display: Alex Johnson
-  given: Alex
-  family: Johnson
+  display: Haobin Tan
+  given: Haobin
+  family: Tan
 postnominals: []
 status:
   icon: "💻"  # Emoji shown on avatar badge: 💻 developer, 🎨 designer, 🚀 startup, 🔬 researcher, 🎓 student
-role: Full-Stack Developer
-email: alex@example.com
-bio: |
-  Full-stack developer with 5+ years of experience building scalable web applications.
-  Passionate about modern JavaScript, cloud architecture, and creating delightful user experiences.
+role: AI Engineer
+email: haobin.tan@outlook.com
+bio: Passionate AI Engineer turning cutting-edge technologies into real-world impact
 
-affiliations:
-  - name: Tech Corp
-    url: https://techcorp.example.com
+# affiliations:
+#   - name: Tech Corp
+#     url: https://techcorp.example.com
 
 links:
   - icon: at-symbol
-    url: mailto:alex@example.com
+    url: mailto:haobin.tan@outlook.com
     label: E-mail Me
   - icon: brands/github
-    url: https://github.com/alexjohnson
+    url: https://github.com/EckoTan0804
   - icon: brands/linkedin
-    url: https://www.linkedin.com/in/alexjohnson/
-  - icon: brands/x
-    url: https://x.com/alexjohnson
+    url: https://www.linkedin.com/in/haobin-tan/
 
 interests:
-  - Web Development
-  - Cloud Architecture
-  - Open Source
-  - Developer Experience
+  - AI
+  - Deep Learning
+  - Computer Vision
+  - Generative AI
+  - Coding
 
 education:
-  - degree: B.S. Computer Science
-    institution: State University
-    start: 2015-09-01
-    end: 2019-05-31
+  - degree: M.Sc. Computer Science
+    institution: Karlsruhe Institute of Technology (KIT)
+    start: 2019-04-15
+    end: 2022-09-30
     summary: |
-      Focus on software engineering and distributed systems.
-      Senior project on distributed caching systems.
-    button:
-      text: View Project
-      url: https://github.com/alexjohnson/senior-project
-      icon: brands/github
+      - Specialization: Artificial Intelligence
+      - Master Thesis: “Real World Crowd Pose Estimation with Transformers” (Grade:1.0/1.0, German Grading System)
+    # button:
+    #   text: View Project
+    #   url: https://github.com/alexjohnson/senior-project
+    #   icon: brands/github
+  - degree: B.Sc. Computer Science
+    institution: Karlsruhe Institute of Technology (KIT)
+    start: 2014-10-15
+    end: 2019-04-01
+    summary: |
+      - Specializations: Robotics and Automation, Software Engineering
 
 experience:
-  - role: Senior Software Engineer
-    org: Tech Corp
-    start: 2023-01-01
+  - role: Software Concept Developer / Innovation Manager for Algorithms
+    org: AUMOVIO (formerly Continental Autonomous Mobility)
+    start: 2022-11-01
     summary: |
-      Lead development of microservices architecture serving 1M+ users.
-      Improved API response time by 40% through optimization.
-      Mentored team of 5 junior developers.
-  - role: Full-Stack Developer
-    org: Startup Inc
-    start: 2021-06-01
-    end: 2022-12-31
+      - **End-to-end leadership** of an AI-enabled vision solution, steering the process from initial concept to customer nomination and series-production preparation, culminating in a key technical patent application. 
+      - Establishment of the solution as a **strategic product-roadmap priority**, driving strong customer engagement and executive/board-level visibility.
+      - **Active full-stack AI development and full lifecycle ownership** (data pipeline, PyTorch model training, optimization, deployment, system integration), coupled with strengthened engineering governance via structured code reviews and documentation.
+      - **Cross-functional project management** across 4 global regions, aligning engineering and business stakeholders in Europe, the USA, China, and India.
+      - **Multi-lingual (CN/EN/DE)** technical interface, delivering high-impact presentations and live demonstrations to international customers, executives, and trade fair audiences.
+  - role: Working Student
+    org: abas Software GmbH
+    start: 2018-06-01
+    end: 2020-01-31
     summary: |
-      Built and deployed 3 production applications from scratch.
-      Implemented CI/CD pipeline reducing deployment time by 60%.
-      Led migration from monolith to microservices architecture.
-  - role: Junior Developer
-    org: Web Agency
-    start: 2020-01-01
-    end: 2021-05-31
-    summary: |
-      Developed client websites using React and modern web technologies.
-      Participated in code reviews and agile ceremonies.
+      - Cloud-based Document Management System (DMS) development using Polymer, Vue.js, TypeScript, JavaScript, and AWS
+      - Creation of automated tests with Jest and Cypress
+      - Close collaboration in an internationally distributed scrum team
 
 skills:
+  - name: AI & Machine Learning
+    items:
+      - label: Deep Learning
+      - label: Machine Learning
+      - label: Computer Vision
+      - label: Generative AI
+      - label: PyTorch
+        level: 5
   - name: Development
     items:
-      - label: TypeScript
-        level: 5
-      - label: React
-        level: 5
-      - label: Node.js
-        level: 5
       - label: Python
-        level: 4
+      - label: C++
+      - label: C
+      - label: Java
+      - label: TypeScript
+      - label: JavaScript
+
   - name: DevOps
     items:
       - label: Docker
-        level: 4
       - label: AWS
-        level: 4
       - label: CI/CD
-        level: 5
+      - label: Git
+      - label: Linux
 
 languages:
   - name: English
+    level: 4
+    label: Proficient
+  - name: German
+    level: 4
+    label: Proficient
+  - name: Chineses (Mandarin)
+    level: 5
+    label: Native
+  - name: Chineses (Cantonese)
     level: 5
     label: Native
 
