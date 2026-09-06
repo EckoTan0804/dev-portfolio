@@ -16,12 +16,11 @@ sections:
       show_scroll_indicator: true
       typewriter:
         enable: true
-        prefix: "I build"
+        prefix: "I" # TODO: Improve
         strings:
-          - "AI solutions"
-          - "scalable APIs"
-          - "beautiful UIs"
-          - "open source tools"
+          - "build AI solutions"
+          - "like developing"
+          - "keep exploring and learning"
         type_speed: 70
         delete_speed: 40
         pause_time: 2500
