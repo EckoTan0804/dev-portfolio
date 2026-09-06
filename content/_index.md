@@ -19,7 +19,7 @@ sections:
         prefix: "I" # TODO: Improve
         strings:
           - "build AI solutions"
-          - "like developing"
+          - "create great things"
           - "keep exploring and learning"
         type_speed: 70
         delete_speed: 40
@@ -63,7 +63,6 @@ sections:
           dark: "#08080c"
       spacing:
         padding: ["4rem", "0", "6rem", "0"]
-
   - block: resume-experience
     id: experience
     design:
@@ -131,7 +130,7 @@ sections:
         padding: ["4rem", "0", "4rem", "0"]
   
   - block: tech-stack
-    id: skills
+    id: tech-stack
     content:
       title: "Tech Stack"
       # subtitle: "Technologies I use to build things"
@@ -181,7 +180,7 @@ sections:
   
   
   - block: tech-stack
-    id: soft-skills
+    id: skills
     content:
       title: "Skills"
       categories:
