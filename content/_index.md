@@ -73,6 +73,23 @@ sections:
           dark: "#0d0d12"
       spacing:
         padding: ["4rem", "0", "4rem", "0"]
+
+  - block: collection
+    id: recommendations
+    content:
+      title: "Recommendations"
+      filters:
+        folders:
+          - recommendations
+    design:
+      style: grid
+      columns: 2
+      background:
+        color:
+          light: "#f5f5f5"
+          dark: "#08080c"
+      spacing:
+        padding: ["4rem", "0", "4rem", "0"]
   
   # Filterable Portfolio - Alpine.js powered project filtering
   # - block: portfolio
