@@ -80,10 +80,11 @@ sections:
       title: Recommendations
       text: |
         #### Dr. Christian Scharfenberger
-        Head of Concepting Camera and Ultrasonic Sensors at AUMOVIO  
+        Head of Concepting Camera and Ultrasonic Sensors at AUMOVIO
+          
         > It is my pleasure to recommend Haobin Tan for senior roles in Al engineering, Al enabled product development, and technical program leadership. I am confident that his technical expertise and collaborative approach will make him a valuable contributor to any organization deploying advanced Al solutions. 
 
-        {{< button url="/uploads/recommendations/AUMOVIO_recommendation-letter_Dr-Christian-Scharfenberger.pdf" new_tab="true" style="secondary" icon="document-text" align="center" size="md" >}}View Recommendation Letter{{< /button >}}
+        <a href="/uploads/recommendations/AUMOVIO_recommendation-letter_Dr-Christian-Scharfenberger.pdf" target="_blank">📄 View Recommendation Letter </a>
 
         ---
         
