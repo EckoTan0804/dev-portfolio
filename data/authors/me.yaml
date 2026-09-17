@@ -110,4 +110,18 @@ languages:
     level: 5
     label: Native
 
-awards: []
+awards:
+  - title: Google Project Management
+    url: https://www.coursera.org/professional-certificates/google-project-management
+    certificate_url: uploads/accomplishments/2026-09-17_Coursera_Google_Project-Management_certificate.pdf
+    date: 2026-09-17
+    awarder: Coursera
+    icon: brands/coursera
+    # summary: |
+    
+  - title: AWS Machine Learning Foundations 2022
+    url: https://www.udacity.com/scholarships/aws-machine-learning-scholarship-program
+    date: 2022-11-20
+    awarder: Udacity
+    icon: brands/udacity
+    certificate_url: uploads/accomplishments/2022-11-20_Udacity_AWS_ML-Engineer_certificate.pdf

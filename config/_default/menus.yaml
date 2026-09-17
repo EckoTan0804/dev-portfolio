@@ -19,6 +19,10 @@ main:
     url: /#skills
     weight: 40
 
+  - name: Accomplishments
+    url: /#accomplishments
+    weight: 50
+
   - name: Contact
     url: /#contact
-    weight: 50
+    weight: 100

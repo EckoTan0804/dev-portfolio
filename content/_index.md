@@ -299,6 +299,23 @@ sections:
   #     spacing:
   #       padding: ["4rem", "0", "4rem", "0"]
   
+  - block: awards
+    id: accomplishments
+    content:
+      title: Accomplishments
+      username: me
+
+    design:
+      style: grid
+      show_levels: true
+      background:
+        color:
+          light: "#f5f5f5"
+          dark: "#08080c"
+      spacing:
+        padding: ["4rem", "0", "4rem", "0"]
+
+
   # Contact Section
   - block: contact-info
     id: contact
