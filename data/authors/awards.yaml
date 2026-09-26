@@ -1,0 +1,11 @@
+schema: hugoblox/author/v1
+slug: awards
+name:
+  display: Awards
+
+awards:
+  - title: Industry 4.0 & AR Challenge
+    date: 2018-12-01
+    awarder: Continental
+    icon: trophy
+    certificate_url: uploads/awards/2018-12-01_Continental_fiction2science_industry4-AR-challenge_certificate.pdf
