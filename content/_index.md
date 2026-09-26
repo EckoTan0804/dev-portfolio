@@ -69,8 +69,8 @@ sections:
       columns: '1'
       background:
         color:
-          light: "#ffffff"
-          dark: "#0d0d12"
+          light: "#f5f5f5"
+          dark: "#08080c"
       spacing:
         padding: ["4rem", "0", "4rem", "0"]
 
@@ -86,7 +86,6 @@ sections:
 
         <a href="/uploads/recommendations/AUMOVIO_recommendation-letter_Dr-Christian-Scharfenberger.pdf" target="_blank">📄 View Recommendation Letter </a>
 
-        ---
         
     design:
       columns: '1'
@@ -134,7 +133,7 @@ sections:
   # Visual Tech Stack - Icons organized by category
   
   - block: collection
-    id: publication
+    id: publications
     content:
       title: "Publications"
       filters:
@@ -152,6 +151,22 @@ sections:
       spacing:
         padding: ["4rem", "0", "4rem", "0"]
   
+  - block: awards
+    id: awards
+    content:
+      title: Awards
+      username: awards
+
+    design:
+      style: grid
+      show_levels: true
+      background:
+        color:
+          light: "#f5f5f5"
+          dark: "#08080c"
+      spacing:
+        padding: ["4rem", "0", "4rem", "0"]
+
   - block: tech-stack
     id: tech-stack
     content:
