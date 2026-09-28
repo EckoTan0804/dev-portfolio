@@ -111,6 +111,13 @@ languages:
     label: Native
 
 awards:
+  - title: Claude 101
+    url: https://academy.claude.com/courses/claude-code-101
+    certificate_url: https://academy.claude.com/verify/4b7ac083c2cb3c909d1a25b2a8edf55c
+    date: 2026-09-28
+    awarder: Claude Academy
+    icon: brands/anthropic
+
   - title: Google Project Management
     url: https://www.coursera.org/professional-certificates/google-project-management
     certificate_url: uploads/accomplishments/2026-09-17_Coursera_Google_Project-Management_certificate.pdf
@@ -125,3 +132,5 @@ awards:
     awarder: Udacity
     icon: brands/amazon
     certificate_url: uploads/accomplishments/2022-11-20_Udacity_AWS_ML-Engineer_certificate.pdf
+
+  
