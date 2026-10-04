@@ -3,8 +3,6 @@ title: Claude
 linkTitle: Claude
 date: 2026-09-20
 weight: 100
-sidebar:
-  open: true
 ---
 
 Notes from learning Claude, organized by course.
