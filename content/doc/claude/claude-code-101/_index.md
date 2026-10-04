@@ -9,7 +9,7 @@ Learning notes for the [Claude Code 101 course](https://academy.claude.com/cours
 
 The course introduces coding agents, setup and prompting, everyday development workflows, and project-specific customization.
 
-## Course outline
+## Course Outline
 
 12 lessons across four modules.
 

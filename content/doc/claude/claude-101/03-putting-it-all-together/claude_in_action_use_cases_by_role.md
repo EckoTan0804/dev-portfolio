@@ -6,7 +6,7 @@ weight: 100
 
 Each use case below links to a detailed guide in Claude's Use Case Gallery with step-by-step instructions you can follow.
 
-## General professional use
+## General Professional Use
 
 These use cases apply across many roles and industries.
 
@@ -56,6 +56,6 @@ Researchers can use Claude to plan literature reviews and verify data analysis.
 - [Plan your literature review](https://academy.claude.com/use-cases/plan-your-literature-review) – Organize your approach to reviewing academic sources
 - [Verify statistics from raw data](https://academy.claude.com/use-cases/verify-statistics-from-raw-data) – Double-check calculations and statistical analyses
 
-## Explore more
+## Explore More
 
 Visit the [Use Case Gallery](https://academy.claude.com/all?kind=use-case) to browse the full collection and find inspiration for how Claude can help with your specific work.

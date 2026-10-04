@@ -1,5 +1,5 @@
 ---
-title: "The explore → plan → code → commit workflow"
+title: "The Explore → Plan → Code → Commit Workflow"
 date: 2026-10-03
 weight: 100
 ---

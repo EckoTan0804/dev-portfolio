@@ -1,5 +1,5 @@
 ---
-title: "Code review"
+title: "Code Review"
 date: 2026-10-03
 weight: 300
 ---
@@ -100,7 +100,7 @@ Sort each finding into one of three piles:
 > [!TIP]
 > When the reviewer flags the same issue a few times, it might be a good idea to write a rule for Claude to read at the start of every session. That file is `CLAUDE.md`.
 
-## When it Pays off to Review Things More Closely
+## When It Pays Off to Review Things More Closely
 
 You should use a human review and a Claude review when 
 

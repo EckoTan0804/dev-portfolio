@@ -109,6 +109,3 @@ Setting [thinking and effort](https://support.claude.com/en/articles/10574485-us
 | Analyzing complex research papers            | Opus   | Deep analysis across long specialized documents, including methodology critique and forward-looking insights |
 | Building a working project from a rough idea | Fable  | Plans the steps, checks its own work, and keeps working on long tasks with fewer mid-task check-ins |
 
-
-
-## 

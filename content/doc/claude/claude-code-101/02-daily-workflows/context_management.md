@@ -1,10 +1,10 @@
 ---
-title: "Context management"
+title: "Context Management"
 date: 2026-10-03
 weight: 200
 ---
 
-## What is the Context Window?
+## What Is the Context Window?
 
 **Context window = the amount of space Claude can hold in its memory**
 

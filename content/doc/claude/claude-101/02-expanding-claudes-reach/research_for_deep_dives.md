@@ -15,7 +15,7 @@ weight: 300
 
 {{< /spoiler >}}
 
-## What is Research?
+## What Is Research?
 
 Research is an advanced feature that transforms Claude from a conversational assistant into a **systematic** investigator. 
 

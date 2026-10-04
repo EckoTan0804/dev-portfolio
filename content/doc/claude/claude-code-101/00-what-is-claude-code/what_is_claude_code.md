@@ -1,5 +1,5 @@
 ---
-title: "What is Claude Code?"
+title: "What Is Claude Code?"
 date: 2026-10-03
 weight: 100
 ---
@@ -10,7 +10,7 @@ Unlike Claude.ai, Claude Code has *direct* access to your files, your terminal, 
 
 The key differentiator is that Claude Code works as an **AI Agent**.
 
-## What is an Agent?
+## What Is an Agent?
 
 An AI Agent is **software that can interact with its environment and perform actions to complete a defined goal**. 
 

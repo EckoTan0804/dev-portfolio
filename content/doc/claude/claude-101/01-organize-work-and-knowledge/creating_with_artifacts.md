@@ -4,7 +4,7 @@ date: 2026-09-21
 weight: 200
 ---
 
-## What are Artifacts?
+## What Are Artifacts?
 
 [Artifacts](https://claude.com/features/artifacts) are the outputs you create with Claude: a document, a deck, a design, a dashboard, a prototype.
 
@@ -52,7 +52,7 @@ These work together in one conversation, and you can ask for one from another: "
 
 Creating an artifact is as simple as having a conversation. Describe what you want in any conversation with Claude (the composer's Output menu lets you pick a design, slides, or a doc), or start from the Artifacts tab, where you can pick a design, a deck, or a doc and describe what you need.
 
-## Working on An Artifact
+## Working on an Artifact
 
 Once an artifact exists, you have three ways to change it — and you can mix them freely
 

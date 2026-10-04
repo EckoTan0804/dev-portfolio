@@ -1,5 +1,5 @@
 ---
-title: "How Claude Code works"
+title: "How Claude Code Works"
 date: 2026-10-03
 weight: 200
 ---

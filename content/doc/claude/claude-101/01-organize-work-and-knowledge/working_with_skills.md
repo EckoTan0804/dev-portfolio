@@ -4,7 +4,7 @@ date: 2026-09-21
 weight: 300
 ---
 
-## What are Skills?
+## What Are Skills?
 
 Skills are **folders of instructions, scripts, and resources** that Claude loads dynamically to improve performance on specialized tasks. Think of them as expertise packages—they teach Claude how to complete specific tasks in a repeatable way.
 

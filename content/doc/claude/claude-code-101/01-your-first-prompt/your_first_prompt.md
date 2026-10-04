@@ -1,5 +1,5 @@
 ---
-title: "Your first prompt"
+title: "Your First Prompt"
 date: 2026-10-03
 weight: 200
 ---

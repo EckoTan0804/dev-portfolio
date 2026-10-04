@@ -16,11 +16,11 @@ weight: 100
 
 {{< /spoiler >}}
 
-## What are Projects?
+## What Are Projects?
 
 Projects are ideal for storing knowledge Claude should reference, organizing related chats around a specific topic or work area, and collaborating with team members who need access to the same shared context.
 
-## When to use Projects
+## When to Use Projects
 
 Projects are particularly valuable when you're working on something **ongoing**—not just a one-off question. Consider creating a project when you have a workflow with:
 
