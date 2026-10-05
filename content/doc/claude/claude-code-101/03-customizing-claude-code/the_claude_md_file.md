@@ -38,7 +38,7 @@ A hierarchy of memory files depending on who they're for:
 
 ### Save corrections to memory
 
-f you find yourself correcting Claude **repeatedly**, explicitly ask Claude to save that rule to memory. Next time you open the project, it'll know.
+If you find yourself correcting Claude **repeatedly**, explicitly ask Claude to save that rule to memory. Next time you open the project, it'll know.
 
 ```
 Put in the CLAUDE.md file

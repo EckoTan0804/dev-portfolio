@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code Concept Map</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --card: #f8fafc;
+    --fg: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --line-strong: #94a3b8;
+    --c-loop: #2563eb;
+    --c-ctx: #7c3aed;
+    --c-perm: #475569;
+    --c-flow: #15803d;
+    --c-custom: #0f766e;
+    --c-md: #c2410c;
+    --c-skill: #be185d;
+    --c-sub: #0e7490;
+    --c-mcp: #a16207;
+    --c-hook: #b91c1c;
+    --c-free: #e2e8f0;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b1120;
+      --card: #111827;
+      --fg: #e5e7eb;
+      --muted: #94a3b8;
+      --line: #1f2937;
+      --line-strong: #64748b;
+      --c-loop: #60a5fa;
+      --c-ctx: #a78bfa;
+      --c-perm: #94a3b8;
+      --c-flow: #4ade80;
+      --c-custom: #2dd4bf;
+      --c-md: #fb923c;
+      --c-skill: #f472b6;
+      --c-sub: #22d3ee;
+      --c-mcp: #facc15;
+      --c-hook: #f87171;
+      --c-free: #1f2937;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b1120;
+    --card: #111827;
+    --fg: #e5e7eb;
+    --muted: #94a3b8;
+    --line: #1f2937;
+    --line-strong: #64748b;
+    --c-loop: #60a5fa;
+    --c-ctx: #a78bfa;
+    --c-perm: #94a3b8;
+    --c-flow: #4ade80;
+    --c-custom: #2dd4bf;
+    --c-md: #fb923c;
+    --c-skill: #f472b6;
+    --c-sub: #22d3ee;
+    --c-mcp: #facc15;
+    --c-hook: #f87171;
+    --c-free: #1f2937;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 8px 16px 24px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 1.15rem; margin: 40px 0 6px; letter-spacing: -0.005em; }
+  .lede, .sub { color: var(--muted); margin: 0 0 14px; }
+  code { font: 0.88em ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .toc { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+  .toc a {
+    display: inline-block; padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px;
+    color: var(--fg); text-decoration: none; font-size: 0.82rem; background: var(--card);
+  }
+  .toc a:hover { border-color: var(--line-strong); }
+
+  /* Figures */
+  .fig { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+  .fig svg { display: block; width: 100%; height: auto; }
+  .fig.mm svg { min-width: 760px; }
+  .fig.rel svg { min-width: 680px; }
+  svg text { fill: var(--fg); font-family: inherit; }
+  svg .muted { fill: var(--muted); }
+  svg .wire { fill: none; stroke: var(--line-strong); stroke-width: 1.5; }
+  svg .arrowhead { fill: var(--line-strong); }
+
+  /* Mind map */
+  .mm-node rect { stroke-width: 1.5; }
+  .mm-center rect { fill: var(--fg); }
+  .mm-center text { fill: var(--bg); }
+
+  /* Relationship map */
+  .loop-node rect { fill: color-mix(in srgb, var(--c-loop) 14%, var(--card)); stroke: var(--c-loop); stroke-width: 1.5; }
+  .loop-wire { fill: none; stroke: var(--c-loop); stroke-width: 2.2; }
+  .loop-head { fill: var(--c-loop); }
+  .ctx-box { fill: color-mix(in srgb, var(--c-ctx) 5%, transparent); stroke: var(--c-ctx); stroke-dasharray: 6 5; stroke-width: 1.3; }
+  .sat rect { fill: color-mix(in srgb, var(--c) 14%, var(--card)); stroke: var(--c); stroke-width: 1.5; }
+  .sat, .link, .loopgrp { transition: opacity .15s; }
+  .sat { cursor: pointer; }
+  .link path { fill: none; stroke: var(--c); stroke-width: 1.8; }
+  .link path.dash { stroke-dasharray: 5 4; }
+  .link text { font-size: 11.5px; fill: var(--c); font-weight: 600; }
+  .rel.focus .sat, .rel.focus .link { opacity: 0.18; }
+  .rel.focus .sat.on, .rel.focus .link.on { opacity: 1; }
+  .caption {
+    margin: 10px 0 0; padding: 10px 14px; border-left: 3px solid var(--cap, var(--c-loop));
+    background: var(--card); border-radius: 0 8px 8px 0; min-height: 3.2em;
+  }
+  .caption b { color: var(--cap, var(--c-loop)); }
+
+  .seg-toggle { display: inline-flex; padding: 3px; margin: 0 0 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); }
+  .seg-toggle button {
+    font: inherit; font-size: 0.85rem; font-weight: 600; padding: 4px 14px; border: 0; border-radius: 999px;
+    background: transparent; color: var(--muted); cursor: pointer;
+  }
+  .seg-toggle button[aria-pressed="true"] { background: var(--c-loop); color: var(--bg); }
+  .seg-toggle button:focus-visible { outline: 2px solid var(--c-loop); outline-offset: 2px; }
+
+  /* Sequence diagram */
+  .fig.seq { position: relative; }
+  .fig.seq svg { min-width: 780px; }
+  .seq-tip {
+    position: absolute; z-index: 2; pointer-events: none; transform: translateX(-50%); white-space: nowrap;
+    padding: 4px 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--card); color: var(--fg);
+    font-size: 0.8rem; font-weight: 700; box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+  }
+  .seq-tip[hidden] { display: none; }
+  html.kitchen .seq-head { cursor: help; }
+  .seq-head rect { stroke-width: 1.5; }
+  .seq-life { stroke: var(--line-strong); stroke-dasharray: 3 4; stroke-width: 1; }
+  .seq-row, .steps li { transition: opacity .15s; }
+  .seq-row text, .seq-note text { font-size: 11.5px; paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round; }
+  .seq-row text { fill: var(--c); font-weight: 600; }
+  .seq-row line, .seq-row path { stroke: var(--c); stroke-width: 1.6; fill: none; }
+  .seq-row line.ret, .seq-row path.ret { stroke-dasharray: 5 4; }
+  .seq-row polygon { fill: var(--c); }
+  .seq-note rect { fill: color-mix(in srgb, var(--c) 10%, var(--card)); stroke: var(--c); stroke-width: 1; }
+  .seq-badge circle { fill: var(--c-loop); }
+  .seq-badge text { fill: var(--bg); font-size: 10.5px; font-weight: 700; stroke: none; }
+  .seq-frame rect.box { fill: none; stroke: var(--line-strong); stroke-width: 1.2; }
+  .seq-frame path { fill: var(--card); stroke: var(--line-strong); stroke-width: 1.2; }
+  .seq-frame text { font-size: 11px; font-weight: 700; fill: var(--muted); }
+  .seq.focus .seq-row, .seq.focus .seq-note { opacity: .15; }
+  .seq.focus .seq-row.on, .seq.focus .seq-note.on { opacity: 1; }
+  .steps { margin: 12px 0 0; padding: 0; list-style: none; counter-reset: st; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 6px 14px; }
+  .steps li { counter-increment: st; display: flex; gap: 8px; font-size: 0.86rem; padding: 6px 8px; border-radius: 8px; cursor: pointer; }
+  .steps li::before { content: counter(st); flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--c-loop); color: var(--bg); font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .steps li.on { background: var(--card); outline: 1px solid var(--line-strong); }
+  .steps.focus li:not(.on) { opacity: .45; }
+
+  /* Context window bars */
+  .bar { display: flex; height: 44px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+  .bar.small { height: 22px; border-radius: 6px; }
+  .seg { display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; padding: 0 4px; }
+  .seg.free { background: var(--c-free); color: var(--muted); }
+  .seg.hatch { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.22) 0 4px, transparent 4px 8px); }
+  .legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px 16px; margin: 12px 0 0; padding: 0; list-style: none; font-size: 0.86rem; }
+  .legend li { display: flex; gap: 8px; align-items: flex-start; }
+  .sw { flex: none; width: 12px; height: 12px; border-radius: 3px; margin-top: 4px; }
+  .legend small { display: block; color: var(--muted); }
+  .ctx-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .panel { border: 1px solid var(--line); border-radius: 12px; background: var(--card); padding: 14px; }
+  .panel h3 { margin: 0 0 8px; font-size: 0.95rem; }
+  .sub-row { display: grid; grid-template-columns: 1fr auto 150px; gap: 10px; align-items: center; margin-top: 12px; }
+  .sub-row .arrow { color: var(--muted); font-size: 0.8rem; text-align: center; }
+  .cmds { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .cmd { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: var(--bg); }
+  .cmd p { margin: 8px 0 0; font-size: 0.85rem; color: var(--muted); }
+  .cmd code { color: var(--fg); font-weight: 700; }
+  .tips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+  .tips li { font-size: 0.84rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); }
+
+  /* Workflow */
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; position: relative; }
+  .band {
+    grid-column: 1 / 3; text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--c-flow);
+    border: 1.5px dashed var(--c-flow); border-bottom: 0; border-radius: 10px 10px 0 0; padding: 4px 6px 8px; margin-bottom: -8px;
+  }
+  .band.r { grid-column: 3 / 5; color: var(--muted); border-color: var(--line-strong); }
+  .stage { position: relative; border: 1.5px solid var(--c-flow); border-radius: 12px; background: var(--card); padding: 12px; }
+  .stage:not(:last-of-type)::after {
+    content: "→"; position: absolute; right: -14px; top: 18px; width: 14px; text-align: center;
+    color: var(--c-flow); font-weight: 700;
+  }
+  .stage .n { font-size: 0.72rem; font-weight: 700; color: var(--c-flow); letter-spacing: .06em; text-transform: uppercase; }
+  .stage h3 { margin: 2px 0 4px; font-size: 1.05rem; }
+  .stage p { margin: 0 0 8px; font-size: 0.85rem; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; padding: 0; list-style: none; }
+  .chip { font-size: 0.76rem; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--c, var(--line-strong)); color: var(--c, var(--fg)); background: color-mix(in srgb, var(--c, var(--line-strong)) 10%, transparent); }
+  .feedback {
+    grid-column: 1 / 5; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    border: 1.5px dashed var(--c-md); border-top: 0; border-radius: 0 0 12px 12px; padding: 14px 12px 8px; margin-top: -8px; font-size: 0.86rem;
+  }
+  .feedback .back { color: var(--c-md); font-weight: 700; }
+  .triage { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .triage span { font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; background: var(--bg); border: 1px solid var(--line); }
+
+  /* Comparison table */
+  .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 0.84rem; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+  thead th { background: var(--card); font-size: 0.75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
+  tbody th { white-space: nowrap; color: var(--c); border-left: 3px solid var(--c); }
+  .yes { color: var(--c-flow); font-weight: 700; }
+  .no { color: var(--muted); }
+
+  /* Decision flow */
+  .decide { display: grid; grid-template-columns: auto 1fr auto auto; gap: 8px 12px; align-items: center; }
+  .q { font-weight: 600; color: var(--muted); grid-row: 1 / 6; writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; font-size: 0.8rem; letter-spacing: .05em; border-right: 2px solid var(--line-strong); padding-left: 6px; }
+  .need { padding: 8px 12px; border-radius: 8px; background: var(--card); border: 1px solid var(--line); font-size: 0.9rem; }
+  .to { color: var(--muted); }
+  .ans { padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; color: var(--c); border: 1.5px solid var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); white-space: nowrap; }
+
+  @media (max-width: 720px) {
+    .flow { grid-template-columns: 1fr 1fr; }
+    .band, .band.r { display: none; }
+    .stage:nth-of-type(2)::after { content: none; }
+    .feedback { grid-column: 1 / 3; border-top: 1.5px dashed var(--c-md); border-radius: 12px; margin-top: 0; padding-top: 8px; }
+    .sub-row { grid-template-columns: 1fr; }
+    .sub-row .arrow { text-align: left; }
+  }
+  @media (max-width: 460px) {
+    .flow { grid-template-columns: 1fr; }
+    .stage::after { content: none !important; }
+    .feedback { grid-column: 1; }
+    .decide { grid-template-columns: 1fr auto; }
+    .q, .to { display: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Claude Code 101: Concept Map</h1>
+  <p class="lede">How the ideas from the course fit together: one agent, one loop, one context window, and a set of ways to shape what goes into it.</p>
+  <ul class="toc">
+    <li><a href="#mindmap">Mind Map</a></li>
+    <li><a href="#loop">Agentic Loop</a></li>
+    <li><a href="#sequence">Prompt to Response</a></li>
+    <li><a href="#context">Context Window</a></li>
+    <li><a href="#workflow">Workflow</a></li>
+    <li><a href="#compare">Comparison</a></li>
+    <li><a href="#decide">Which One?</a></li>
+  </ul>
+
+  <!-- 1. Mind map -->
+  <h2 id="mindmap">Claude Code 101 at a Glance</h2>
+  <p class="sub">Claude Code is an <b>AI agent</b>: software that interacts with its environment and acts to reach a goal, using an LLM that runs in a loop with tools.</p>
+  <div class="fig mm"><svg id="mm" viewBox="0 0 1000 560" role="img" aria-label="Mind map of Claude Code concepts"></svg></div>
+
+  <!-- 2. Relationship map -->
+  <h2 id="loop">How Everything Plugs into the Agentic Loop</h2>
+  <p class="sub">The loop is the engine. Every other concept either feeds the context, provides tools, gates actions or runs work in a separate context. Hover or tap a box, or switch to the kitchen view to see the same ideas as a restaurant kitchen.</p>
+  <div class="seg-toggle" role="group" aria-label="Diagram view">
+    <button type="button" data-mode="tech" aria-pressed="true">Claude Code</button>
+    <button type="button" data-mode="kitchen" aria-pressed="false">🍳 Kitchen</button>
+  </div>
+  <div class="fig rel" id="relfig">
+    <svg viewBox="0 0 900 580" role="img" aria-label="Diagram of how CLAUDE.md, skills, subagents, MCP, permissions and hooks connect to the agentic loop">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker>
+        <marker id="ahl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="loop-head" d="M0,0 L10,5 L0,10 z"/></marker>
+      </defs>
+
+      <!-- Prompt + steering -->
+      <g class="sat" data-k="prompt" style="--c:var(--c-loop)">
+        <rect x="330" y="46" width="150" height="40" rx="20"/>
+        <text x="405" y="71" text-anchor="middle" font-size="14" font-weight="700">Your Prompt</text>
+      </g>
+      <g class="sat" data-k="steer" style="--c:var(--c-loop)">
+        <rect x="520" y="46" width="180" height="40" rx="20"/>
+        <text x="610" y="71" text-anchor="middle" font-size="13" font-weight="600">Interrupt · Steer · Add</text>
+      </g>
+      <g class="link" data-k="prompt" style="--c:var(--c-loop)"><path d="M420,86 L432,164" marker-end="url(#ah)"/></g>
+      <g class="link" data-k="steer" style="--c:var(--c-loop)"><path class="dash" d="M600,86 L560,128" marker-end="url(#ah)"/></g>
+
+      <!-- Context window boundary -->
+      <g class="sat" data-k="ctx" style="--c:var(--c-ctx)">
+        <rect class="ctx-box" x="210" y="128" width="480" height="304" rx="18" style="fill:color-mix(in srgb, var(--c-ctx) 5%, transparent)"/>
+        <text x="226" y="150" font-size="12" font-weight="700" style="fill:var(--c-ctx)">CONTEXT WINDOW</text>
+      </g>
+
+      <!-- The loop -->
+      <g class="loopgrp">
+        <g class="loop-node"><rect x="365" y="166" width="170" height="48" rx="10"/><text x="450" y="195" text-anchor="middle" font-size="14" font-weight="700">1 · Gather Context</text></g>
+        <g class="loop-node"><rect x="505" y="356" width="170" height="48" rx="10"/><text x="590" y="385" text-anchor="middle" font-size="14" font-weight="700">2 · Take Action</text></g>
+        <g class="loop-node"><rect x="225" y="356" width="170" height="48" rx="10"/><text x="310" y="385" text-anchor="middle" font-size="14" font-weight="700">3 · Verify Results</text></g>
+        <path class="loop-wire" d="M505,214 Q575,262 584,352" marker-end="url(#ahl)"/>
+        <path class="loop-wire" d="M505,394 Q450,428 399,394" marker-end="url(#ahl)"/>
+        <path class="loop-wire" d="M316,352 Q325,262 392,216" marker-end="url(#ahl)"/>
+        <text x="450" y="292" text-anchor="middle" font-size="15" font-weight="800" style="fill:var(--c-loop)">Agentic Loop</text>
+        <text x="450" y="312" text-anchor="middle" font-size="11.5" class="muted">repeat until the result</text>
+        <text x="450" y="327" text-anchor="middle" font-size="11.5" class="muted">is verified, then stop</text>
+      </g>
+
+      <!-- Left satellites -->
+      <g class="link" data-k="md" style="--c:var(--c-md)"><path d="M190,150 L362,182" marker-end="url(#ah)"/><text x="292" y="190" text-anchor="middle">every session</text></g>
+      <g class="sat" data-k="md" style="--c:var(--c-md)">
+        <rect x="20" y="124" width="170" height="52" rx="10"/>
+        <text x="105" y="146" text-anchor="middle" font-size="14" font-weight="700">CLAUDE.md</text>
+        <text x="105" y="164" text-anchor="middle" font-size="11" class="muted">project memory</text>
+      </g>
+
+      <g class="link" data-k="skill" style="--c:var(--c-skill)"><path d="M190,284 L380,216" marker-end="url(#ah)"/><text x="268" y="236" text-anchor="middle">on demand</text></g>
+      <g class="sat" data-k="skill" style="--c:var(--c-skill)">
+        <rect x="20" y="262" width="170" height="52" rx="10"/>
+        <text x="105" y="284" text-anchor="middle" font-size="14" font-weight="700">Skills</text>
+        <text x="105" y="302" text-anchor="middle" font-size="11" class="muted">task-specific know-how</text>
+      </g>
+
+      <!-- Subagent (bottom) -->
+      <g class="link" data-k="sub" style="--c:var(--c-sub)"><path d="M450,502 L450,436" marker-end="url(#ah)"/><text x="458" y="476" font-size="11.5">summary only</text></g>
+      <g class="link" data-k="sub" style="--c:var(--c-sub)"><path class="dash" d="M380,512 Q300,500 300,408" marker-end="url(#ah)"/><text x="232" y="480" text-anchor="middle">clean-context review</text></g>
+      <g class="sat" data-k="sub" style="--c:var(--c-sub)">
+        <rect x="365" y="504" width="170" height="52" rx="10"/>
+        <text x="450" y="526" text-anchor="middle" font-size="14" font-weight="700">Subagent</text>
+        <text x="450" y="544" text-anchor="middle" font-size="11" class="muted">own context window</text>
+      </g>
+
+      <!-- Right satellites -->
+      <g class="link" data-k="mcp" style="--c:var(--c-mcp)"><path d="M770,176 L640,352" marker-end="url(#ah)"/><text x="728" y="252">adds tools</text></g>
+      <g class="link" data-k="mcp" style="--c:var(--c-mcp)"><path class="dash" d="M710,148 L540,184" marker-end="url(#ah)"/><text x="632" y="150" text-anchor="middle">tool definitions</text></g>
+      <g class="sat" data-k="mcp" style="--c:var(--c-mcp)">
+        <rect x="710" y="124" width="170" height="52" rx="10"/>
+        <text x="795" y="146" text-anchor="middle" font-size="14" font-weight="700">MCP</text>
+        <text x="795" y="164" text-anchor="middle" font-size="11" class="muted">external tools &amp; data</text>
+      </g>
+
+      <g class="link" data-k="perm" style="--c:var(--c-perm)"><path d="M710,328 L679,362" marker-end="url(#ah)"/><text x="760" y="296" text-anchor="middle">gates actions</text></g>
+      <g class="sat" data-k="perm" style="--c:var(--c-perm)">
+        <rect x="710" y="304" width="170" height="52" rx="10"/>
+        <text x="795" y="326" text-anchor="middle" font-size="14" font-weight="700">Permissions</text>
+        <text x="795" y="344" text-anchor="middle" font-size="11" class="muted">manual · auto-accept · auto</text>
+      </g>
+
+      <g class="link" data-k="hook" style="--c:var(--c-hook)"><path d="M710,470 L650,406" marker-end="url(#ah)"/><text x="768" y="444" text-anchor="middle">fires every time</text></g>
+      <g class="sat" data-k="hook" style="--c:var(--c-hook)">
+        <rect x="710" y="454" width="170" height="52" rx="10"/>
+        <text x="795" y="476" text-anchor="middle" font-size="14" font-weight="700">Hooks</text>
+        <text x="795" y="494" text-anchor="middle" font-size="11" class="muted">deterministic rules</text>
+      </g>
+    </svg>
+  </div>
+  <p class="caption" id="cap"></p>
+
+  <!-- 2b. Sequence -->
+  <h2 id="sequence">From Prompt to Response: Under the Hood</h2>
+  <p class="sub">Who talks to whom, in order, from the moment the user presses Enter to the response. This is a simplified view: solid arrows are calls, dashed arrows are replies, and boxes mark parts that repeat (<b>loop</b>), happen only sometimes (<b>opt</b>) or branch (<b>alt</b>). Hover or tap a step.</p>
+  <div class="seg-toggle" role="group" aria-label="Diagram view">
+    <button type="button" data-mode="tech" aria-pressed="true">Claude Code</button>
+    <button type="button" data-mode="kitchen" aria-pressed="false">🍳 Kitchen</button>
+  </div>
+  <div class="fig seq" id="seqfig"><svg id="seq" viewBox="0 0 1040 900" role="img" aria-label="Sequence diagram from prompt to response"></svg><div class="seq-tip" role="tooltip" hidden></div></div>
+  <ol class="steps" id="steps"></ol>
+
+  <!-- 3. Context window -->
+  <h2 id="context">What Lives in the Context Window</h2>
+  <p class="sub">The context window is Claude's working memory. Everything you type, every file it reads and every tool result adds to it. The proportions below are illustrative, not measured.</p>
+  <div class="ctx-grid">
+    <div class="panel">
+      <h3>Main Session</h3>
+      <div class="bar" aria-label="Illustrative breakdown of the main context window">
+        <div class="seg" style="flex:7;background:var(--c-perm)">System</div>
+        <div class="seg" style="flex:8;background:var(--c-md)">CLAUDE.md</div>
+        <div class="seg" style="flex:3;background:var(--c-skill)" title="Skill names and descriptions"></div>
+        <div class="seg" style="flex:16;background:var(--c-mcp)">MCP tools</div>
+        <div class="seg hatch" style="flex:38;background:var(--c-loop)">Conversation + tool results</div>
+        <div class="seg" style="flex:4;background:var(--c-sub)" title="Subagent summary"></div>
+        <div class="seg free" style="flex:24">free</div>
+      </div>
+      <ul class="legend">
+        <li><span class="sw" style="background:var(--c-md)"></span><span><b>CLAUDE.md</b><small>Always loaded, every session</small></span></li>
+        <li><span class="sw" style="background:var(--c-skill)"></span><span><b>Skill descriptions</b><small>Only name and description until a skill is used</small></span></li>
+        <li><span class="sw" style="background:var(--c-mcp)"></span><span><b>MCP tool definitions</b><small>Always loaded, even when unused. Above 10%, Claude switches to tool search</small></span></li>
+        <li><span class="sw" style="background:var(--c-loop)"></span><span><b>Conversation + tool results</b><small>Grows with every prompt, file read and command</small></span></li>
+        <li><span class="sw" style="background:var(--c-sub)"></span><span><b>Subagent summary</b><small>The only thing a subagent brings back</small></span></li>
+        <li><span class="sw" style="background:var(--c-free)"></span><span><b>Free space</b><small>When it runs out, auto-compaction kicks in</small></span></li>
+      </ul>
+      <div class="sub-row">
+        <div>
+          <div class="bar small" aria-label="Illustrative subagent context window">
+            <div class="seg" style="flex:10;background:var(--c-perm)"></div>
+            <div class="seg hatch" style="flex:70;background:var(--c-sub)">exploration: reads, searches, tool calls</div>
+            <div class="seg free" style="flex:20"></div>
+          </div>
+          <small style="color:var(--muted)">Subagent's own window, discarded when it finishes</small>
+        </div>
+        <div class="arrow">→ returns only →</div>
+        <div class="bar small"><div class="seg" style="flex:1;background:var(--c-sub)">summary</div></div>
+      </div>
+    </div>
+
+    <div class="cmds">
+      <div class="cmd">
+        <code>/context</code>
+        <div class="bar small" style="margin-top:8px">
+          <div class="seg" style="flex:7;background:var(--c-perm)"></div><div class="seg" style="flex:8;background:var(--c-md)"></div><div class="seg" style="flex:3;background:var(--c-skill)"></div><div class="seg" style="flex:16;background:var(--c-mcp)"></div><div class="seg hatch" style="flex:42;background:var(--c-loop)"></div><div class="seg free" style="flex:24"></div>
+        </div>
+        <p><b>Inspect.</b> Shows the size and what takes the most space. Nothing changes.</p>
+      </div>
+      <div class="cmd">
+        <code>/compact</code>
+        <div class="bar small" style="margin-top:8px">
+          <div class="seg" style="flex:7;background:var(--c-perm)"></div><div class="seg" style="flex:8;background:var(--c-md)"></div><div class="seg" style="flex:3;background:var(--c-skill)"></div><div class="seg" style="flex:16;background:var(--c-mcp)"></div><div class="seg" style="flex:8;background:var(--c-loop)"></div><div class="seg free" style="flex:58"></div>
+        </div>
+        <p><b>Summarize.</b> Keeps a memory of the work so far and frees space. Use it to keep going on the same feature. Details may be lost.</p>
+      </div>
+      <div class="cmd">
+        <code>/clear</code>
+        <div class="bar small" style="margin-top:8px">
+          <div class="seg" style="flex:7;background:var(--c-perm)"></div><div class="seg" style="flex:8;background:var(--c-md)"></div><div class="seg" style="flex:3;background:var(--c-skill)"></div><div class="seg" style="flex:16;background:var(--c-mcp)"></div><div class="seg free" style="flex:66"></div>
+        </div>
+        <p><b>Start fresh.</b> Removes the conversation, so it can't bias a new feature. Anything Claude should remember belongs in CLAUDE.md.</p>
+      </div>
+    </div>
+  </div>
+  <ul class="tips" aria-label="Tips for saving context">
+    <li>💡 Be specific: vague prompts cost more exploration</li>
+    <li>💡 Disable unused MCP servers (<code>/mcp</code>)</li>
+    <li>💡 Prefer a Skill or a CLI (<code>gh</code>, <code>aws</code>) over always-loaded MCP tools</li>
+    <li>💡 Delegate research to subagents</li>
+  </ul>
+
+  <!-- 4. Workflow -->
+  <h2 id="workflow">Explore → Plan → Code → Commit</h2>
+  <p class="sub">The daily workflow, with the concepts you use at each stage.</p>
+  <div class="flow">
+    <div class="band">Plan mode (read-only): the cheapest place to course-correct</div>
+    <div class="band r">Your permission mode decides how much Claude asks</div>
+    <section class="stage">
+      <div class="n">Step 1</div><h3>Explore</h3>
+      <p>Give Claude the relevant context.</p>
+      <ul class="chips"><li class="chip" style="--c:var(--c-perm)">Plan mode</li><li class="chip" style="--c:var(--c-sub)">explore subagent</li><li class="chip" style="--c:var(--c-md)">CLAUDE.md</li><li class="chip">web search</li></ul>
+    </section>
+    <section class="stage">
+      <div class="n">Step 2</div><h3>Plan</h3>
+      <p>Agree on the steps and what "correct" looks like.</p>
+      <ul class="chips"><li class="chip" style="--c:var(--c-perm)">Plan mode</li><li class="chip" style="--c:var(--c-sub)">plan subagent</li><li class="chip">clarifying questions</li><li class="chip">success criteria</li></ul>
+    </section>
+    <section class="stage">
+      <div class="n">Step 3</div><h3>Code</h3>
+      <p>Approve the plan, then iterate until it works.</p>
+      <ul class="chips"><li class="chip" style="--c:var(--c-perm)">permission mode</li><li class="chip" style="--c:var(--c-loop)">agentic loop</li><li class="chip">test suite</li><li class="chip" style="--c:var(--c-mcp)">tools / MCP</li><li class="chip" style="--c:var(--c-hook)">hooks</li></ul>
+    </section>
+    <section class="stage">
+      <div class="n">Step 4</div><h3>Commit</h3>
+      <p>Review the diff, get a second opinion, then ship.</p>
+      <ul class="chips"><li class="chip"><code>/diff</code></li><li class="chip" style="--c:var(--c-sub)"><code>/code-review</code> (clean context)</li><li class="chip"><code>/rewind</code></li><li class="chip">commit message</li></ul>
+      <div class="triage"><span>Fix now</span><span>Ask why</span><span>Leave it</span></div>
+    </section>
+    <div class="feedback"><span class="back">↺ Feedback loop</span><span>Same correction or review finding again? Save it to <b style="color:var(--c-md)">CLAUDE.md</b>, or write a <b style="color:var(--c-skill)">Skill</b> if it only matters for certain tasks.</span></div>
+  </div>
+
+  <!-- 5. Comparison -->
+  <h2 id="compare">Choosing the Right Customization</h2>
+  <div class="tbl">
+    <table>
+      <thead><tr><th></th><th>What It Is</th><th>When It Loads</th><th>Context Cost</th><th>Guaranteed?</th><th>Where It Lives</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr style="--c:var(--c-md)"><th>CLAUDE.md</th><td>Markdown onboarding notes added to your prompt</td><td>Every session, automatically</td><td>Always present, so keep it compact</td><td class="no">No, guidance</td><td>Project root (team, committed) · user config folder (just you)</td><td>Project facts, conventions, repeated corrections</td></tr>
+        <tr style="--c:var(--c-skill)"><th>Skill</th><td>Folder with a <code>SKILL.md</code>, plus scripts and resources</td><td>When its description matches your request</td><td>Name and description only, until used</td><td class="no">No, guidance</td><td><code>.claude/skills</code> in the repo (team) · <code>~/.claude/skills</code> (personal)</td><td>Task-specific know-how: review checklist, commit format, brand guide</td></tr>
+        <tr style="--c:var(--c-sub)"><th>Subagent</th><td>Separate agent with its own system prompt and context window</td><td>When Claude delegates a task</td><td>Only the summary it returns</td><td class="no">No</td><td>Markdown files with YAML frontmatter · built-ins: <code>general-purpose</code>, <code>explore</code>, <code>plan</code></td><td>Exploration, research, clean-context review</td></tr>
+        <tr style="--c:var(--c-mcp)"><th>MCP</th><td>Open standard connecting external tools and data</td><td>Tool definitions load up front</td><td>High: every tool definition, even unused ones</td><td class="no">No</td><td><code>claude mcp add</code> · local / user / project (<code>.mcp.json</code>)</td><td>Context outside the codebase: issue trackers, databases, apps</td></tr>
+        <tr style="--c:var(--c-hook)"><th>Hook</th><td>Command that runs on a lifecycle event</td><td>On its event: <code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, …</td><td>None</td><td class="yes">Yes, deterministic</td><td><code>settings.json</code> · <code>.claude/settings.json</code> to share</td><td>Must-happen rules: format, log, block <code>rm -rf</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. Decision flow -->
+  <h2 id="decide">"I Want Claude To…"</h2>
+  <div class="decide">
+    <div class="q">I want Claude to…</div>
+    <div class="need">always know something about this project</div><span class="to">→</span><span class="ans" style="--c:var(--c-md)">CLAUDE.md</span>
+    <div class="need">know how to do something, but only for certain tasks</div><span class="to">→</span><span class="ans" style="--c:var(--c-skill)">Skill</span>
+    <div class="need">do something <b>every single time</b>, no exceptions</div><span class="to">→</span><span class="ans" style="--c:var(--c-hook)">Hook</span>
+    <div class="need">reach a system outside the codebase</div><span class="to">→</span><span class="ans" style="--c:var(--c-mcp)">MCP (or a CLI)</span>
+    <div class="need">research or review without cluttering my context</div><span class="to">→</span><span class="ans" style="--c:var(--c-sub)">Subagent</span>
+  </div>
+</main>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  function s(tag, attrs, parent, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  // ---- Mind map ----
+  var MM = [
+    { name: 'Agentic Loop', c: '--c-loop', side: -1, y: 95,
+      leaves: ['Gather context', 'Take action (tools)', 'Verify results', 'Repeat until verified'] },
+    { name: 'Context', c: '--c-ctx', side: -1, y: 280,
+      leaves: ['Context window = memory', 'Auto-compaction at limit', '/context · /compact · /clear', 'Subagents keep it clean'] },
+    { name: 'Permissions', c: '--c-perm', side: -1, y: 455,
+      leaves: ['Manual: ask every time', 'Auto-accept: edits only', 'Plan mode: read-only', 'Auto: background classifier', 'Shift+Tab to cycle'] },
+    { name: 'Daily Workflow', c: '--c-flow', side: 1, y: 130,
+      leaves: ['Explore', 'Plan', 'Code', 'Commit', '/diff · /code-review · /rewind'] },
+    { name: 'Customization', c: '--c-custom', side: 1, y: 390,
+      leaves: [['CLAUDE.md: always loaded', '--c-md'], ['Skills: loaded on demand', '--c-skill'], ['Subagents: own context', '--c-sub'],
+               ['MCP: external tools & data', '--c-mcp'], ['Hooks: deterministic rules', '--c-hook']] }
+  ];
+  var mm = document.getElementById('mm');
+  var CX = 500, CY = 280, CW = 140, BW = 124, LW = 210, LH = 26, GAP = 32;
+  var wires = s('g', {}, mm), nodes = s('g', {}, mm);
+  function curve(x1, y1, x2, y2, color) {
+    var mx = (x1 + x2) / 2;
+    s('path', { d: 'M' + x1 + ',' + y1 + ' C' + mx + ',' + y1 + ' ' + mx + ',' + y2 + ' ' + x2 + ',' + y2,
+                fill: 'none', style: 'stroke:var(' + color + ');stroke-width:2;opacity:.75' }, wires);
+  }
+  MM.forEach(function (b) {
+    var bx = CX + b.side * 190;                // branch node center
+    curve(CX + b.side * CW / 2, CY, bx - b.side * BW / 2, b.y, b.c);
+    var g = s('g', { 'class': 'mm-node' }, nodes);
+    s('rect', { x: bx - BW / 2, y: b.y - 18, width: BW, height: 36, rx: 18,
+                style: 'fill:var(' + b.c + ');stroke:var(' + b.c + ')' }, g);
+    s('text', { x: bx, y: b.y + 5, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 700, style: 'fill:#fff' }, g, b.name);
+    var n = b.leaves.length;
+    b.leaves.forEach(function (leaf, i) {
+      var label = Array.isArray(leaf) ? leaf[0] : leaf, lc = Array.isArray(leaf) ? leaf[1] : b.c;
+      var ly = b.y + (i - (n - 1) / 2) * GAP;
+      var inner = bx + b.side * BW / 2, lx = b.side < 0 ? 10 : 1000 - 10 - LW;
+      curve(inner, b.y, b.side < 0 ? lx + LW : lx, ly, b.c);
+      var lg = s('g', {}, nodes);
+      s('rect', { x: lx, y: ly - LH / 2, width: LW, height: LH, rx: 7,
+                  style: 'fill:color-mix(in srgb, var(' + lc + ') 13%, var(--card));stroke:var(' + lc + ');stroke-width:1.2' }, lg);
+      s('text', { x: lx + 12, y: ly + 4.5, 'font-size': 12.5 }, lg, label);
+    });
+  });
+  var cg = s('g', { 'class': 'mm-node mm-center' }, nodes);
+  s('rect', { x: CX - CW / 2, y: CY - 34, width: CW, height: 68, rx: 14 }, cg);
+  s('text', { x: CX, y: CY - 4, 'text-anchor': 'middle', 'font-size': 17, 'font-weight': 800 }, cg, 'Claude Code');
+  s('text', { x: CX, y: CY + 16, 'text-anchor': 'middle', 'font-size': 11.5 }, cg, 'AI agent · LLM in a loop');
+
+  // ---- Sequence diagram: prompt to response ----
+  var LIVES = [
+    ['User', 'Customer', '--c-loop'], ['Claude Code', "Chef's Hands", '--c-loop'], ['Skills', 'Recipe Book', '--c-skill'],
+    ['Model (LLM)', "Chef's Brain", '--c-loop'], ['MCP', 'Suppliers', '--c-mcp'], ['Tools', 'Stove & Knives', '--c-flow'],
+    ['Subagent', 'Sous-Chef', '--c-sub']
+  ];
+  var USER = 0, CC = 1, SKILL = 2, LLM = 3, MCP = 4, TOOL = 5, SUB = 6;
+  function LX(i) { return 100 + i * 140; }
+  var ROWY = [];
+  function RY(r) { return ROWY[r]; }
+  // [step, from, to, tech label, kitchen label, color, kind, note x1, note x2]  kind: call | ret | self | note
+  var ROWS = [
+    [1, CC, CC, 'Session start: CLAUDE.md · skill descriptions · MCP tool list are loaded', 'Shift starts: house rules read · recipe index and supplier list at hand', '--c-md', 'note', 190, 880],
+    [2, USER, CC, 'prompt', 'order ticket', '--c-loop', 'call'],
+    [3, CC, LLM, 'prompt + context', 'what next?', '--c-loop', 'call'],
+    [3, LLM, CC, 'tool call', 'next move', '--c-loop', 'ret'],
+    [4, CC, SKILL, 'load full SKILL.md', 'open recipe page', '--c-skill', 'call'],
+    [4, SKILL, CC, 'instructions', 'recipe steps', '--c-skill', 'ret'],
+    [5, CC, TOOL, 'read · edit · bash', 'chop & cook', '--c-flow', 'call'],
+    [5, TOOL, CC, 'result', 'done', '--c-flow', 'ret'],
+    [6, CC, MCP, 'call external tool', 'order from supplier', '--c-mcp', 'call'],
+    [6, MCP, CC, 'data', 'delivery', '--c-mcp', 'ret'],
+    [7, CC, SUB, 'task description', 'prep this, please', '--c-sub', 'call'],
+    [7, SUB, SUB, 'explores in its own context', 'preps at own station', '--c-sub', 'self'],
+    [7, SUB, CC, 'summary only', 'finished prep only', '--c-sub', 'ret'],
+    [8, CC, LLM, '↺ Results go back to the model, which checks them and repeats until verified', '↺ Taste, adjust and repeat until the dish is right', '--c-loop', 'note', 190, 880],
+    [9, LLM, CC, 'final answer (no tool call)', 'the dish is ready', '--c-loop', 'ret'],
+    [10, CC, USER, 'response', 'dish served', '--c-loop', 'ret']
+  ];
+  var LOOP_FIRST = 2, LOOP_LAST = 13;
+  // [first row, last row, x1, x2, tag, tech guard, kitchen guard, divider row?, tech guard 2, kitchen guard 2]
+  var FRAMES = [
+    [LOOP_FIRST, LOOP_LAST, 170, 1030, 'loop', '[until the result is verified]', '[until the dish is right]'],
+    [4, 5, 200, 440, 'opt', '[request matches a skill]', '[dish needs a recipe]'],
+    [6, 9, 200, 840, 'alt', '[built-in tool]', '[in the kitchen]', 8, '[external system]', '[from outside]'],
+    [10, 12, 200, 1025, 'opt', '[side research]', '[extra prep]']
+  ];
+  var STEPS = [
+    ['<b>Session start.</b> Claude Code loads CLAUDE.md, the skill names and descriptions, and the MCP tool list.', '<b>Shift starts.</b> The house rules are read; the recipe index and supplier list are at hand.'],
+    ['The user types a <b>prompt</b>.', 'The customer hands over an <b>order ticket</b>.'],
+    ['Claude Code sends the prompt and context to the <b>model</b>, which picks the next step as a tool call.', "The <b>chef's brain</b> reads the ticket and decides the next move."],
+    ['If the request matches a <b>skill</b> description, the full skill loads.', 'If a dish needs a recipe, the chef opens just that <b>recipe page</b>.'],
+    ['A built-in <b>tool</b> runs (read, edit, bash) and returns a result.', 'The chef chops and cooks with the <b>stove and knives</b>.'],
+    ['Or an <b>MCP</b> server reaches an external system and returns data.', 'Or a <b>supplier</b> delivers what the kitchen does not have.'],
+    ['Side research goes to a <b>subagent</b>: it works in its own context and returns only a summary.', 'A <b>sous-chef</b> preps at their own station and hands over only the finished prep.'],
+    ['<b>Verify</b>: results go back to the model, and the loop repeats until the result is verified.', '<b>Taste</b>, adjust, and repeat until the dish is right.'],
+    ['The model answers with text and no tool call, so the loop ends.', 'The brain says: <b>the dish is ready</b>.'],
+    ['The user gets the <b>response</b>, and could interrupt or steer at any point.', 'The dish is <b>served</b>. The customer could call out changes all along.']
+  ];
+  // Row y positions: extra room where a frame starts (for its label) or ends
+  (function () {
+    var starts = {}, ends = {};
+    FRAMES.forEach(function (f) { starts[f[0]] = true; ends[f[1]] = true; if (f[7]) starts[f[7]] = true; });
+    for (var i = 0, y = 112; i < ROWS.length; i++) {
+      if (i > 0) y += 34 + (starts[i] ? 20 : 0) + (ends[i - 1] ? 8 : 0);
+      ROWY.push(y);
+    }
+  })();
+  var seq = document.getElementById('seq'), seqfig = document.getElementById('seqfig');
+  function dual(el, tech, kit) { el.textContent = tech; el.dataset.tech = tech; el.dataset.kitchen = kit; return el; }
+  var gFrames = s('g', {}, seq), gLives = s('g', {}, seq), gRows = s('g', {}, seq);
+  LIVES.forEach(function (l, i) {
+    var x = LX(i), g = s('g', { 'class': 'seq-head' }, gLives);
+    s('line', { x1: x, y1: 62, x2: x, y2: RY(ROWS.length - 1) + 20, 'class': 'seq-life' }, gLives);
+    s('rect', { x: x - 58, y: 18, width: 116, height: 44, rx: 9,
+                style: 'fill:color-mix(in srgb, var(' + l[2] + ') 16%, var(--card));stroke:var(' + l[2] + ')' }, g);
+    dual(s('text', { x: x, y: 45, 'text-anchor': 'middle', 'font-size': 12.5, 'font-weight': 700 }, g), l[0], l[1]);
+  });
+  // "The user can steer anytime" band on the User lifeline, spanning the loop
+  var bandMid = (RY(LOOP_FIRST) + RY(LOOP_LAST)) / 2;
+  var band = s('g', { 'class': 'seq-note', 'data-step': STEPS.length, style: '--c:var(--c-loop)' }, gRows);
+  s('rect', { x: LX(USER) - 9, y: RY(LOOP_FIRST) - 14, width: 18, height: RY(LOOP_LAST) - RY(LOOP_FIRST) + 28, rx: 9, style: 'stroke-dasharray:4 3' }, band);
+  dual(s('text', { x: LX(USER) - 18, y: bandMid, 'text-anchor': 'middle', transform: 'rotate(-90 ' + (LX(USER) - 18) + ' ' + bandMid + ')', style: 'fill:var(--c-loop);font-weight:600' }, band),
+       'the user can interrupt · steer · add context anytime', '"No onions!" — the customer can call out changes anytime');
+  FRAMES.forEach(function (f) {
+    var y1 = RY(f[0]) - 40, y2 = RY(f[1]) + 14, g = s('g', { 'class': 'seq-frame' }, gFrames);
+    s('rect', { 'class': 'box', x: f[2], y: y1, width: f[3] - f[2], height: y2 - y1, rx: 3 }, g);
+    s('path', { d: 'M' + f[2] + ',' + y1 + ' h38 v10 l-6,6 h-32 z' }, g);
+    s('text', { x: f[2] + 5, y: y1 + 12 }, g, f[4]);
+    dual(s('text', { x: f[2] + 44, y: y1 + 12 }, g), f[5], f[6]);
+    if (f[7]) {
+      var yd = RY(f[7]) - 36;
+      s('line', { x1: f[2], y1: yd, x2: f[3], y2: yd, style: 'stroke:var(--line-strong);stroke-dasharray:6 4' }, g);
+      dual(s('text', { x: f[2] + 44, y: yd + 12 }, g), f[8], f[9]);
+    }
+  });
+  var seenStep = {};
+  ROWS.forEach(function (r, i) {
+    var y = RY(i), step = r[0], x1 = LX(r[1]), x2 = LX(r[2]), kind = r[6];
+    var g = s('g', { 'class': kind === 'note' ? 'seq-note' : 'seq-row', 'data-step': step, style: '--c:var(' + r[5] + ')' }, gRows);
+    if (kind === 'note') {
+      s('rect', { x: r[7], y: y - 13, width: r[8] - r[7], height: 22, rx: 5 }, g);
+      dual(s('text', { x: (r[7] + r[8]) / 2, y: y + 2, 'text-anchor': 'middle', style: 'fill:var(--fg)' }, g), r[3], r[4]);
+    } else if (kind === 'self') {
+      s('path', { d: 'M' + x1 + ',' + (y - 8) + ' h34 v16 h-30' }, g);
+      s('polygon', { points: (x1 + 1) + ',' + (y + 8) + ' ' + (x1 + 9) + ',' + (y + 4) + ' ' + (x1 + 9) + ',' + (y + 12) }, g);
+      dual(s('text', { x: x1 - 8, y: y + 4, 'text-anchor': 'end' }, g), r[3], r[4]);
+    } else {
+      var dir = x2 > x1 ? 1 : -1;
+      s('line', { x1: x1, y1: y, x2: x2 - dir * 8, y2: y, 'class': kind === 'ret' ? 'ret' : '' }, g);
+      s('polygon', { points: x2 + ',' + y + ' ' + (x2 - dir * 9) + ',' + (y - 4.5) + ' ' + (x2 - dir * 9) + ',' + (y + 4.5) }, g);
+      dual(s('text', { x: (x1 + x2) / 2, y: y - 6, 'text-anchor': 'middle' }, g), r[3], r[4]);
+    }
+    if (!seenStep[step]) {
+      seenStep[step] = true;
+      var b = s('g', { 'class': 'seq-badge' }, g);
+      s('circle', { cx: 22, cy: y, r: 9 }, b);
+      s('text', { x: 22, y: y + 3.6, 'text-anchor': 'middle' }, b, step);
+    }
+  });
+  seq.setAttribute('viewBox', '0 0 1040 ' + (RY(ROWS.length - 1) + 30));
+  var stepsEl = document.getElementById('steps');
+  STEPS.forEach(function (t, i) {
+    var li = document.createElement('li');
+    var span = document.createElement('span');
+    li.dataset.step = i + 1; span.dataset.tech = t[0]; span.dataset.kitchen = t[1]; span.dataset.html = '1';
+    span.innerHTML = t[0];
+    li.appendChild(span);
+    stepsEl.appendChild(li);
+  });
+  var seqPinned = null;
+  function showStep(n) {
+    seqfig.classList.toggle('focus', !!n); stepsEl.classList.toggle('focus', !!n);
+    document.querySelectorAll('#seq [data-step], #steps li').forEach(function (el) { el.classList.toggle('on', String(n) === el.dataset.step); });
+  }
+  document.querySelectorAll('#seq [data-step], #steps li').forEach(function (el) {
+    el.style.cursor = 'pointer';
+    el.addEventListener('mouseenter', function () { showStep(el.dataset.step); });
+    el.addEventListener('mouseleave', function () { showStep(seqPinned); });
+    el.addEventListener('click', function (e) { e.stopPropagation(); seqPinned = seqPinned === el.dataset.step ? null : el.dataset.step; showStep(seqPinned); });
+  });
+  seqfig.addEventListener('click', function () { seqPinned = null; showStep(null); hideTip(); });
+
+  // Kitchen view: hovering an analogy reveals the Claude Code concept it stands for
+  var tip = seqfig.querySelector('.seq-tip');
+  function hideTip() { tip.hidden = true; }
+  function showTip(target, e) {
+    if (!kitchen || !target.dataset.tip) return;
+    tip.textContent = target.dataset.tip;
+    tip.hidden = false;
+    var anchor = target.querySelector('text[data-kitchen]') || target;
+    var f = seqfig.getBoundingClientRect(), r = (target.classList.contains('seq-head') ? target : anchor).getBoundingClientRect();
+    var x = r.left + r.width / 2, yBelow = r.bottom + 6, yAbove = r.top - tip.offsetHeight - 6;
+    if (r.height > 60 && e && e.clientY) { x = e.clientX; yBelow = e.clientY + 14; yAbove = e.clientY - tip.offsetHeight - 14; }
+    var top = yBelow - f.top + seqfig.scrollTop;
+    if (top + tip.offsetHeight > seqfig.scrollHeight - 4) top = yAbove - f.top + seqfig.scrollTop;
+    var half = tip.offsetWidth / 2, left = x - f.left + seqfig.scrollLeft;
+    left = Math.max(half + 4, Math.min(seqfig.scrollWidth - half - 4, left));
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  }
+  seq.querySelectorAll('text[data-kitchen]').forEach(function (t) {
+    var target = t.closest('.seq-head, .seq-row, .seq-note') || t;
+    target.dataset.tip = t.dataset.tech;
+    target.addEventListener('mouseenter', function (e) { showTip(target, e); });
+    target.addEventListener('mouseleave', hideTip);
+    target.addEventListener('click', function (e) { e.stopPropagation(); showTip(target, e); });
+  });
+
+  // ---- Relationship map interactions ----
+  var CAP = {
+    _: ['--c-loop', '<b>The agentic loop</b> runs inside the context window: gather context, take action with tools, verify, and repeat until the result is verified. Pick a box to see where it plugs in.'],
+    prompt: ['--c-loop', '<b>Your prompt</b> starts the loop. The more specific it is, the less Claude has to explore, and the less context that exploration uses.'],
+    steer: ['--c-loop', '<b>You stay in the loop.</b> You can interrupt, steer or add context at any point while Claude works.'],
+    ctx: ['--c-ctx', '<b>Context window</b>: Claude\'s working memory. Prompts, file reads, tool calls and results all fill it. Near the limit it is <b>auto-compacted</b>. Manage it with <code>/context</code>, <code>/compact</code> and <code>/clear</code>.'],
+    md: ['--c-md', '<b>CLAUDE.md</b> is read automatically at the start of every session and appended to your prompt, like an onboarding script. Use it for what Claude should always know, so it doesn\'t have to rediscover it.'],
+    skill: ['--c-skill', '<b>Skills</b> load on demand: only the name and description sit in context. When your request matches a description, Claude loads the full skill. Unlike slash commands, you don\'t type them.'],
+    sub: ['--c-sub', '<b>Subagents</b> run with their own context window, from a custom system prompt plus a task description. Their file reads and tool calls never reach the main context; only a <b>summary</b> comes back. They are also the clean-context reviewer behind <code>/code-review</code>.'],
+    mcp: ['--c-mcp', '<b>MCP</b> connects Claude to external tools and data such as issue trackers and databases. Each server adds new tools for <b>Take Action</b>, but its tool definitions sit in context even when unused.'],
+    perm: ['--c-perm', '<b>Permissions</b> decide whether an action needs your approval: Manual, Auto-accept (edits only), Auto (background classifier) or Plan mode (read-only). Cycle with <code>Shift+Tab</code>.'],
+    hook: ['--c-hook', '<b>Hooks</b> are deterministic: a command that runs on an event, every time. <code>PreToolUse</code> can block a tool call (exit code 2 sends the reason back to Claude). <code>PostToolUse</code> formats and logs. <code>Stop</code> runs when Claude finishes.']
+  };
+  // Kitchen analogy: same diagram, every label and caption swapped
+  var CAP_K = {
+    _: ['--c-loop', '<b>The chef at work</b> = the agentic loop. The chef reads the order and preps, cooks, tastes, and repeats until the dish is right. It all happens on one countertop. Pick a box to see who else is in the kitchen.'],
+    prompt: ['--c-loop', '<b>Order ticket</b> = your prompt. A precise ticket ("medium-rare, no salt, sauce on the side") means less guessing, just as a specific prompt means less exploring.'],
+    steer: ['--c-loop', '<b>The customer calling out changes</b> = interrupting and steering. You can say "no onions!" mid-cook instead of waiting for the finished plate.'],
+    ctx: ['--c-ctx', '<b>Countertop</b> = context window. Space is limited, and everything put down stays until it is cleared. <code>/compact</code> clears the counter but keeps a prep note. <code>/clear</code> wipes it for a new service.'],
+    md: ['--c-md', '<b>House rules on the wall</b> = CLAUDE.md. Things like "we never use peanuts" and "plate from the left" are read at the start of every shift, so the chef doesn\'t relearn them each time.'],
+    skill: ['--c-skill', '<b>Recipe book</b> = Skills. Only the index sits on the counter. When an order calls for a dish, the chef opens that one recipe, so the book doesn\'t clutter the counter.'],
+    sub: ['--c-sub', '<b>Sous-chef</b> = subagent. Works at their own prep station and hands over only the finished prep, never the peels and scraps. A second chef with a fresh palate tasting the dish = <code>/code-review</code> in a clean context.'],
+    mcp: ['--c-mcp', '<b>Suppliers</b> = MCP. They bring ingredients and equipment from outside the kitchen, but every supplier\'s catalog takes up counter space, even when nothing is ordered from it.'],
+    perm: ['--c-perm', '<b>The head chef\'s OK</b> = permissions. Ask before every step (Manual), trust routine prep (Auto-accept), or trust everything while an inspector watches for anything dangerous (Auto).'],
+    hook: ['--c-hook', '<b>Kitchen timers and locks</b> = hooks. They go off <b>every time</b>, whatever the chef remembers. The timer always rings (<code>PostToolUse</code>), and the walk-in lock can stop an action outright (<code>PreToolUse</code>, exit code 2).']
+  };
+  var KITCHEN = {
+    'Your Prompt': 'Order Ticket',
+    'Interrupt · Steer · Add': 'Customer: "No Onions!"',
+    'CONTEXT WINDOW': 'COUNTERTOP',
+    '1 · Gather Context': '1 · Read & Prep',
+    '2 · Take Action': '2 · Cook',
+    '3 · Verify Results': '3 · Taste',
+    'Agentic Loop': 'The Chef at Work',
+    'repeat until the result': 'cook and taste until',
+    'is verified, then stop': 'the dish is right',
+    'CLAUDE.md': 'House Rules', 'project memory': 'posted on the wall', 'every session': 'read every shift',
+    'Skills': 'Recipe Book', 'task-specific know-how': 'open only the page needed', 'on demand': 'page on demand',
+    'Subagent': 'Sous-Chef', 'own context window': 'own prep station',
+    'summary only': 'hands over the prep', 'clean-context review': 'fresh-palate tasting',
+    'MCP': 'Suppliers', 'external tools & data': 'ingredients from outside',
+    'adds tools': 'brings ingredients', 'tool definitions': 'catalog space',
+    'Permissions': 'Head Chef\'s OK', 'manual · auto-accept · auto': 'ask · trust prep · trust all', 'gates actions': 'approves each step',
+    'Hooks': 'Kitchen Timers', 'deterministic rules': 'go off every time', 'fires every time': 'never forgets'
+  };
+  var fig = document.getElementById('relfig'), cap = document.getElementById('cap'), pinned = null, kitchen = false;
+  var relsvg = fig.querySelector('svg'), ARIA = relsvg.getAttribute('aria-label');
+  fig.querySelectorAll('text').forEach(function (t) {
+    var k = KITCHEN[t.textContent];
+    if (k) { t.dataset.tech = t.textContent; t.dataset.kitchen = k; }
+  });
+  function setMode(isKitchen) {
+    kitchen = isKitchen;
+    document.querySelectorAll('[data-kitchen]').forEach(function (t) {
+      var v = kitchen ? t.dataset.kitchen : t.dataset.tech;
+      if (t.dataset.html) t.innerHTML = v; else t.textContent = v;
+    });
+    relsvg.setAttribute('aria-label', kitchen ? 'Kitchen analogy of the agentic loop: chef, order ticket, countertop, house rules, recipe book, sous-chef, suppliers, head chef and kitchen timers' : ARIA);
+    document.querySelectorAll('.seg-toggle button').forEach(function (b) { b.setAttribute('aria-pressed', String((b.dataset.mode === 'kitchen') === kitchen)); });
+    try { localStorage.setItem('cc101-rel-mode', kitchen ? 'kitchen' : 'tech'); } catch (e) {}
+    show(pinned);
+    document.documentElement.classList.toggle('kitchen', kitchen);
+    if (typeof hideTip === 'function') hideTip();
+  }
+  function show(k) {
+    var c = (kitchen ? CAP_K : CAP)[k] || (kitchen ? CAP_K : CAP)._;
+    cap.innerHTML = c[1];
+    cap.style.setProperty('--cap', 'var(' + c[0] + ')');
+    fig.classList.toggle('focus', !!k);
+    fig.querySelectorAll('.sat, .link').forEach(function (el) { el.classList.toggle('on', el.dataset.k === k); });
+  }
+  fig.querySelectorAll('.sat').forEach(function (el) {
+    el.addEventListener('mouseenter', function () { show(el.dataset.k); });
+    el.addEventListener('mouseleave', function () { show(pinned); });
+    el.addEventListener('click', function (e) { e.stopPropagation(); pinned = pinned === el.dataset.k ? null : el.dataset.k; show(pinned); });
+  });
+  fig.addEventListener('click', function () { pinned = null; show(null); });
+  document.querySelectorAll('.seg-toggle button').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.dataset.mode === 'kitchen'); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem('cc101-rel-mode'); } catch (e) {}
+  setMode(saved === 'kitchen');
+
+  // ---- Embedding: follow the parent site's theme and background, and size the iframe ----
+  var frame = null, pdoc = null;
+  try { frame = window.frameElement; pdoc = frame && window.parent.document; } catch (e) { frame = null; }
+  function syncTheme() {
+    if (!pdoc) return;
+    document.documentElement.dataset.theme = pdoc.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    var bg = getComputedStyle(pdoc.body).backgroundColor;
+    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') document.documentElement.style.setProperty('--bg', bg);
+  }
+  function fit() { if (frame) frame.style.height = Math.ceil(document.body.getBoundingClientRect().height) + 'px'; }
+  if (pdoc) {
+    syncTheme();
+    new MutationObserver(function () { setTimeout(syncTheme, 50); setTimeout(syncTheme, 400); }).observe(pdoc.documentElement, { attributes: true, attributeFilter: ['class'] });
+  }
+  if (frame && window.ResizeObserver) new ResizeObserver(fit).observe(document.body);
+  fit();
+})();
+</script>
+</body>
+</html>
