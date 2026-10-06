@@ -215,6 +215,8 @@
   thead th { background: var(--card); font-size: 0.75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
   tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
   tbody th { white-space: nowrap; color: var(--c); border-left: 3px solid var(--c); }
+  .cell-list { margin: 0; padding-left: 1.1em; }
+  .cell-list li + li { margin-top: 4px; }
   .yes { color: var(--c-flow); font-weight: 700; }
   .no { color: var(--muted); }
 
@@ -470,11 +472,11 @@
     <table>
       <thead><tr><th></th><th>What It Is</th><th>When It Loads</th><th>Context Cost</th><th>Guaranteed?</th><th>Where It Lives</th><th>Best For</th></tr></thead>
       <tbody>
-        <tr style="--c:var(--c-md)"><th>CLAUDE.md</th><td>Markdown onboarding notes added to your prompt</td><td>Every session, automatically</td><td>Always present, so keep it compact</td><td class="no">No, guidance</td><td>Project root (team, committed) · user config folder (just you)</td><td>Project facts, conventions, repeated corrections</td></tr>
-        <tr style="--c:var(--c-skill)"><th>Skill</th><td>Folder with a <code>SKILL.md</code>, plus scripts and resources</td><td>When its description matches your request</td><td>Name and description only, until used</td><td class="no">No, guidance</td><td><code>.claude/skills</code> in the repo (team) · <code>~/.claude/skills</code> (personal)</td><td>Task-specific know-how: review checklist, commit format, brand guide</td></tr>
-        <tr style="--c:var(--c-sub)"><th>Subagent</th><td>Separate agent with its own system prompt and context window</td><td>When Claude delegates a task</td><td>Only the summary it returns</td><td class="no">No</td><td>Markdown files with YAML frontmatter · built-ins: <code>general-purpose</code>, <code>explore</code>, <code>plan</code></td><td>Exploration, research, clean-context review</td></tr>
-        <tr style="--c:var(--c-mcp)"><th>MCP</th><td>Open standard connecting external tools and data</td><td>Tool definitions load up front</td><td>High: every tool definition, even unused ones</td><td class="no">No</td><td><code>claude mcp add</code> · local / user / project (<code>.mcp.json</code>)</td><td>Context outside the codebase: issue trackers, databases, apps</td></tr>
-        <tr style="--c:var(--c-hook)"><th>Hook</th><td>Command that runs on a lifecycle event</td><td>On its event: <code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, …</td><td>None</td><td class="yes">Yes, deterministic</td><td><code>settings.json</code> · <code>.claude/settings.json</code> to share</td><td>Must-happen rules: format, log, block <code>rm -rf</code></td></tr>
+        <tr style="--c:var(--c-md)"><th>CLAUDE.md</th><td>Markdown onboarding notes added to your prompt</td><td>Every session, automatically</td><td>Always present, so keep it compact</td><td class="no">No, guidance</td><td><ul class="cell-list"><li>Project root (team, committed)</li><li>User config folder (just you)</li></ul></td><td>Project facts, conventions, repeated corrections</td></tr>
+        <tr style="--c:var(--c-skill)"><th>Skill</th><td>Folder with a <code>SKILL.md</code>, plus scripts and resources</td><td>When its description matches your request</td><td>Name and description only, until used</td><td class="no">No, guidance</td><td><ul class="cell-list"><li><code>.claude/skills</code> in the repo (team)</li><li><code>~/.claude/skills</code> (personal)</li></ul></td><td>Task-specific know-how: review checklist, commit format, brand guide</td></tr>
+        <tr style="--c:var(--c-sub)"><th>Subagent</th><td>Separate agent with its own system prompt and context window</td><td>When Claude delegates a task</td><td>Only the summary it returns</td><td class="no">No</td><td><ul class="cell-list"><li>Markdown files with YAML frontmatter</li><li>Built-ins: <code>general-purpose</code>, <code>explore</code>, <code>plan</code></li></ul></td><td>Exploration, research, clean-context review</td></tr>
+        <tr style="--c:var(--c-mcp)"><th>MCP</th><td>Open standard connecting external tools and data</td><td>Tool definitions load up front</td><td>High: every tool definition, even unused ones</td><td class="no">No</td><td><ul class="cell-list"><li><code>claude mcp add</code></li><li>Local / user / project (<code>.mcp.json</code>)</li></ul></td><td>Context outside the codebase: issue trackers, databases, apps</td></tr>
+        <tr style="--c:var(--c-hook)"><th>Hook</th><td>Command that runs on a lifecycle event</td><td>On its event: <code>PreToolUse</code>, <code>PostToolUse</code>, <code>Stop</code>, …</td><td>None</td><td class="yes">Yes, deterministic</td><td><ul class="cell-list"><li><code>settings.json</code></li><li><code>.claude/settings.json</code> to share</li></ul></td><td>Must-happen rules: format, log, block <code>rm -rf</code></td></tr>
       </tbody>
     </table>
   </div>
