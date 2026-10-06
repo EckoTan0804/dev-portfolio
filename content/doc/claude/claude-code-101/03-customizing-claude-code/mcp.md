@@ -8,7 +8,7 @@ weight: 400
 
 A lot of your context lives outside your codebase — in databases, productivity apps, or public repositories. MCP bridges that gap.
 
-## What Can You Do With MCP
+## What Can You Do with MCP
 
 Concept of "**tools**" in agentic AI: Tools give agents like Claude Code the ability to perform actions that help them complete tasks more effectively.
 

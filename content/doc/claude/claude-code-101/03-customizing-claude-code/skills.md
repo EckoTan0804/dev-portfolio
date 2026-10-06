@@ -8,7 +8,7 @@ weight: 300
 
 {{< youtube bjdBVZa66oU >}}
 
-## What is a Skill
+## What Is a Skill
 
 A skill is a markdown file that teaches Claude how to do something once, and Claude applies that knowledge automatically whenever its relevant.
 

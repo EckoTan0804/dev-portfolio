@@ -4,7 +4,7 @@ date: 2026-10-03
 weight: 200
 ---
 
-## Why Subagent is Necessary
+## Why Subagent Is Necessary
 
 Managing context in Claude Code is important.
 
@@ -30,7 +30,7 @@ When Claude uses a subagent, a **separate** window starts. The subagent receives
 
 The subagent then works **autonomously**. When it reads file, edits file, or used tools, NONE of these will apear in the main conversation. Just a summary is returned back. The entire subagent conversation then gets completely discarded.
 
-## Built-in Subagents
+## Built-In Subagents
 
 `general-purpose`: For multi-step tasks that require both exploration and action.
 
