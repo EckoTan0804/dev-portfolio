@@ -67,3 +67,6 @@ Desktop.ini
 
 *.log
 npm-debug.log*
+
+# Python bytecode (scripts/check_doc_conventions.py)
+__pycache__/

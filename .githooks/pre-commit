@@ -1,0 +1,16 @@
+#!/bin/sh
+# Check staged content/doc/ files against .claude/conventions/.
+# Capitalization is fixed in the working tree; the commit is then blocked so the fix can be reviewed and staged.
+# Enable once per clone: git config core.hooksPath .githooks
+
+files=$(git diff --cached --name-only --diff-filter=ACMR -- content/doc)
+[ -z "$files" ] && exit 0
+
+# shellcheck disable=SC2086
+if ! python3 scripts/check_doc_conventions.py --fix $files; then
+  echo
+  echo "pre-commit: content/doc convention check failed."
+  echo "Review any fixes with 'git diff', 'git add' them, resolve remaining issues, and commit again."
+  echo "(Bypass with 'git commit --no-verify'.)"
+  exit 1
+fi

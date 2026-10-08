@@ -1,0 +1,6 @@
+# Terms the title-case check leaves alone (exact, case-sensitive match).
+# One term per line. Use for key names, commands and lowercase product names.
+shift-tab
+npm
+pnpm
+uPic

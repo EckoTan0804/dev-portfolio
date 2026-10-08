@@ -19,7 +19,7 @@ weight: 100
 >   - Spend your emphasis budget on the few rules that matter most.
 >   - Keep revising the file whenever Claude gets something wrong.
 
-## First, Ask if CLAUDE.md Is Even the Right Tool
+## First, Ask If CLAUDE.md Is Even the Right Tool
 
 Before you write a rule, ask whether it belongs in CLAUDE.md at all: 
 
