@@ -4,17 +4,19 @@ date: 2026-10-03
 weight: 100
 ---
 
-A handful of habits for handling long Claude Code sessions without babysitting every step of it:
-
-- **Scope** you work first, then
-- **Steer**
-  - Direct your **compact**ion so the summary keeps what matters.
-  - Use the **rewind** menu to course correct when Claude drifts.
-  - Set a **goal** when you can describe "done" better than you can describe the steps.
-  - Use **loop** for waiting on something outside the session.
-  - Run parallel work in **worktrees**.
-
-
+> [!NOTE]
+>
+> ### TL;DR
+>
+> A handful of habits for handling long Claude Code sessions without babysitting every step of it:
+>
+> - **Scope** you work first, then
+> - **Steer**
+>   - Direct your compaction so the summary keeps what matters.
+>   - Use the rewind menu to course correct when Claude drifts.
+>   - Set a goal when you can describe "done" better than you can describe the steps.
+>   - Use loop for waiting on something outside the session.
+>   - Run parallel work in worktrees.
 
 ## Scope the Work First with Plan Mode
 
