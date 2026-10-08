@@ -90,7 +90,9 @@ def title_case_issues(text):
             words.append((chunk.start(), None, False, False))
             first_in_chunk = False
         for part in re.finditer(r"[^-/–\x00]+", chunk.group(0)):
-            m = re.match(r"[(\[{\"'*_~“‘]*([A-Za-z][A-Za-z0-9'’.]*)", part.group(0))
+            if part.start() > 0 and chunk.group(0)[part.start() - 1] == "\x00":
+                continue  # suffix glued to code or an allowlisted term, e.g. uPic's
+            m =re.match(r"[(\[{\"'*_~“‘]*([A-Za-z][A-Za-z0-9'’.]*)", part.group(0))
             if m:
                 offset = chunk.start() + part.start() + m.start(1)
                 tail = part.start() > 0 and chunk.group(0)[part.start() - 1] == "-"
