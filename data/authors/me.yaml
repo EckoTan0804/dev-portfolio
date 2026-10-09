@@ -111,6 +111,13 @@ languages:
     label: Native
 
 awards:
+  - title: Claude Code in Action
+    url: https://academy.claude.com/courses/claude-code-in-action
+    certificate_url: https://academy.claude.com/verify/2cd50e38db528f8eed66071afeab28d0
+    date: 2026-10-08
+    awarder: Claude Academy
+    icon: brands/anthropic
+
   - title: Claude Code 101
     url: https://academy.claude.com/courses/claude-code-101
     certificate_url: https://academy.claude.com/verify/9723ac7ba3aeb932cf278fa7b5598af8
